@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.SocketException;
 
@@ -40,17 +41,24 @@ public class PiranhaNodeClient {
             return;
         }
 
-        dependencyNodeURI = "http://" + dependencyNodeURI+":"+ port+ "/dependency/request";
+        dependencyNodeURI = "http://" + dependencyNodeURI + ":" + port + "/dependency/request";
 
         HttpPost request = new HttpPost(dependencyNodeURI);
         JsonObject json = new JsonObject();
         json.addProperty("op", "REQUEST");
         json.addProperty("className", className);
 
+        try {
+            request.setEntity(new StringEntity(json.toString()));
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Error in setting Entity ", e);
+        }
+
         pool.addReqestedDependency(className);
 
         try {
             HttpResponse response = doRequest(request);
+            LOG.debug("Successfully Requested Dependency "+className);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new IOException("Status Code not 200 in DependencyRequest Response ");
             }
@@ -85,10 +93,11 @@ public class PiranhaNodeClient {
 
         int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
 
-        HttpPost request = new HttpPost("http://" + IPAddress+":"+ port + "/dependency/response");
+        HttpPost request = new HttpPost("http://" + IPAddress + ":" + port + "/dependency/response");
         request.setEntity(new StringEntity(requestJson.toString()));
 
         doRequest(request);
+        LOG.debug("Successdully sent Dependency "+className);
         //comm.writeToSocket(socket, requestJson);
     }
 }
