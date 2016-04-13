@@ -74,7 +74,7 @@ public class PiranhaNodeEndpoint {
                     ConcurrentLinkedQueue<JsonObject> classes = gson.fromJson(roundObject.get("classes").getAsString(), Utils.concurrentLinkedQueueType);
 
                     ConcurrentHashMap<String, String> dependencyMap = gson.fromJson(roundObject.get("dependencyMap").getAsString(), Utils.concurrentHashMapType);
-
+                    LOG.debug(dependencyMap);
                     DependencyPool.getDependencyPool().updateDependencyMap(dependencyMap);
 
                     CompileRound round = new CompileRound(classes);
@@ -129,7 +129,7 @@ public class PiranhaNodeEndpoint {
 
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("className", className);
-                    jsonObject.addProperty("IP", httpExchange.getRemoteAddress().toString());
+                    jsonObject.addProperty("IP", httpExchange.getRemoteAddress().getHostString());
 
                     DependencyResponseHandler responseHandler = DependencyResponseHandler.getDependencyResponseHandler();
                     responseHandler.addARequestedDependency(jsonObject);
