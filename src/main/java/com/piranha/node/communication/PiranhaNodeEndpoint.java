@@ -195,6 +195,7 @@ public class PiranhaNodeEndpoint {
                     fileOutputStream.close();
 
 
+                    LOG.debug("Successfully Received Dependency "+request.get("className").getAsString());
                     DependencyPool pool = DependencyPool.getDependencyPool();
                     pool.removeRequestedDependency(request.get("className").getAsString());
                     pool.addAClass(request.get("className").getAsString());
