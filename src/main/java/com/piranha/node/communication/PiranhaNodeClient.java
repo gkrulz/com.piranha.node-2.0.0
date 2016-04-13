@@ -35,12 +35,12 @@ public class PiranhaNodeClient {
         String dependencyNodeURI = pool.whereIsDependency(className);
 
         InetAddress loacalIP = Utils.getFirstNonLoopbackAddress(true, false);
-
+        int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
         if (loacalIP.getHostAddress().equals(dependencyNodeURI)) {
             return;
         }
 
-        dependencyNodeURI = "http://" + dependencyNodeURI + "/dependency/request";
+        dependencyNodeURI = "http://" + dependencyNodeURI+":"+ port+ "/dependency/request";
 
         HttpPost request = new HttpPost(dependencyNodeURI);
         JsonObject json = new JsonObject();
@@ -83,8 +83,9 @@ public class PiranhaNodeClient {
         requestJson.addProperty("className", className);
         requestJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
 
+        int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
 
-        HttpPost request = new HttpPost("http://" + IPAddress + "/dependency/response");
+        HttpPost request = new HttpPost("http://" + IPAddress+":"+ port + "/dependency/response");
         request.setEntity(new StringEntity(requestJson.toString()));
 
         doRequest(request);
