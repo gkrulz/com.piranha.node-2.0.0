@@ -33,6 +33,9 @@ public class PiranhaNodeClient {
 
         DependencyPool pool = DependencyPool.getDependencyPool();
 
+        if (pool.haveIRequestedDependency(className)) {
+            return;
+        }
         String dependencyNodeURI = pool.whereIsDependency(className);
 
         InetAddress loacalIP = Utils.getFirstNonLoopbackAddress(true, false);
