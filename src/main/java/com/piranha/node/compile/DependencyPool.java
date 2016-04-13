@@ -25,11 +25,11 @@ public class DependencyPool {
 
     }
 
-    public ConcurrentHashMap<String, String> getCompletedCompiles(){
+    public synchronized ConcurrentHashMap<String, String> getCompletedCompiles(){
         return completedCompiles;
     }
 
-    public ConcurrentHashMap<String, String> getPendingCompiles(){
+    public synchronized ConcurrentHashMap<String, String> getPendingCompiles(){
         return pendingCompiles;
     }
 
@@ -44,39 +44,39 @@ public class DependencyPool {
         return singletonObject;
     }
 
-    public void addAClass(String absoluteClassName) {
+    public synchronized void addAClass(String absoluteClassName) {
         completedCompiles.put(absoluteClassName, absoluteClassName);
         pendingCompiles.remove(absoluteClassName);
     }
 
-    public void addClasses(ArrayList<String> classList) {
+    public synchronized void addClasses(ArrayList<String> classList) {
         for (String className : classList) {
             completedCompiles.put(className, className);
             pendingCompiles.remove(className);
         }
     }
 
-    public boolean doIHaveDependency(String absoluteClassName) {
+    public synchronized boolean doIHaveDependency(String absoluteClassName) {
         return (completedCompiles.get(absoluteClassName) != null);
     }
 
-    public boolean haveIRequestedDependency(String absoluteClassName) {
+    public synchronized boolean haveIRequestedDependency(String absoluteClassName) {
         return requestedDependencies.containsKey(absoluteClassName);
     }
 
-    public void addReqestedDependency(String absoluteClassName) {
+    public synchronized void addReqestedDependency(String absoluteClassName) {
         requestedDependencies.put(absoluteClassName, absoluteClassName);
     }
 
-    public void updateDependencyMap(ConcurrentHashMap<String, String> newDependencyMap) {
+    public synchronized void updateDependencyMap(ConcurrentHashMap<String, String> newDependencyMap) {
         dependencyMap.putAll(newDependencyMap);
     }
 
-    public String whereIsDependency(String absoluteClassName) {
+    public synchronized String whereIsDependency(String absoluteClassName) {
         return dependencyMap.get(absoluteClassName);
     }
 
-    public ArrayList<String> checkForDependencies(HashMap<String, String> testMap) {
+    public synchronized ArrayList<String> checkForDependencies(HashMap<String, String> testMap) {
         ArrayList<String> nonContainingList = new ArrayList<String>();
         for (String dependency : testMap.values()) {
             if (completedCompiles.get(dependency) == null) {
@@ -86,11 +86,11 @@ public class DependencyPool {
         return nonContainingList;
     }
 
-    public void addAPendingClass(String className) {
+    public synchronized void addAPendingClass(String className) {
         pendingCompiles.put(className, className);
     }
 
-    public void removeRequestedDependency(String className){
+    public synchronized void removeRequestedDependency(String className){
         requestedDependencies.remove(className);
     }
 }
