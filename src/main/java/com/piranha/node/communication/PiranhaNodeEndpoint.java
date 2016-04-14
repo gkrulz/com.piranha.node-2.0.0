@@ -200,6 +200,12 @@ public class PiranhaNodeEndpoint {
                     pool.removeRequestedDependency(request.get("className").getAsString());
                     pool.addAClass(request.get("className").getAsString());
 
+                    String msg = "Dependency Received Successfully";
+                    httpExchange.sendResponseHeaders(200, msg.length());
+                    OutputStream os = httpExchange.getResponseBody();
+                    os.write(msg.getBytes());
+                    os.close();
+
                 } catch (Exception e) {
                     LOG.debug("Cannot parse /dependency/response Object from " + httpExchange.getRemoteAddress());
                     LOG.error("Exception Occurred in /dependency/response method ", e);
