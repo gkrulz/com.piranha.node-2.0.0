@@ -38,10 +38,12 @@ public class DependencyResponseHandler extends Thread {
 
     public void run() {
         DependencyPool pool = DependencyPool.getDependencyPool();
+        ConcurrentHashMap<String, String> compiledClasses = pool.getCompletedCompiles();
+
         while (true) {
-            ConcurrentHashMap<String, String> compiledClasses = pool.getCompletedCompiles();
 
             while (dependenciesToSend.size() > 0) {
+                LOG.debug(dependenciesToSend);
                 JsonObject classObject = dependenciesToSend.peek();
                 String classname = classObject.get("className").getAsString();
                 if (compiledClasses.get(classname) != null) {
@@ -52,6 +54,8 @@ public class DependencyResponseHandler extends Thread {
                     } catch (IOException e) {
                         LOG.error("Error In Sending Dependency " + classname, e);
                     }
+                }else{
+                    dependenciesToSend.add(dependenciesToSend.poll());
                 }
             }
         }
