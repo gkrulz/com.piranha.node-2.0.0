@@ -68,8 +68,9 @@ public class Terminator extends Thread {
             }
 
             ObjectOutputStream stream = new ObjectOutputStream(socket.getOutputStream());
-            for (String className : classesToSend){
-
+            JsonObject[] objects = new JsonObject[classesToSend.size()];
+            for (int i = 0; i < classesToSend.size(); i++){
+                String className = classesToSend.get(i);
                 String path = PiranhaConfig.getProperty("DESTINATION_PATH") + Utils.PATH_SEPERATOR;
                 String packagePath = className;
                 packagePath = packagePath.replace(".", Utils.PATH_SEPERATOR) + ".class";
@@ -81,9 +82,11 @@ public class Terminator extends Thread {
                 responseJson.addProperty("className", className);
                 responseJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
 
-                stream.writeObject(responseJson.toString());
+                objects[i] = responseJson;
 
             }
+
+            stream.writeObject(objects);
             stream.flush();
             try {
                 Thread.sleep(100);
