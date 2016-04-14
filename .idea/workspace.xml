@@ -3,12 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6bf4d254-4898-419a-9340-54e365f4545d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/piranha/node/Bootstrap.java" afterPath="$PROJECT_DIR$/src/main/java/com/piranha/node/Bootstrap.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/DependencyResponseHandler.java" afterPath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/DependencyResponseHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java" afterPath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java" afterPath="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/piranha/node/compile/CompileRound.java" afterPath="$PROJECT_DIR$/src/main/java/com/piranha/node/compile/CompileRound.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/config.properties" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" />
     </list>
     <ignored path="PiranhaNode.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PiranhaNodeClient.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="PiranhaNodeClient.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.83201265">
+              <caret line="104" column="105" selection-start-line="104" selection-start-column="105" selection-end-line="104" selection-end-column="105" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DependencyResponseHandler.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DependencyResponseHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/DependencyResponseHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6196513">
-              <caret line="54" column="38" selection-start-line="54" selection-start-column="38" selection-end-line="54" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="52" column="47" selection-start-line="52" selection-start-column="47" selection-end-line="52" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -128,7 +124,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="180" column="60" selection-start-line="180" selection-start-column="60" selection-end-line="180" selection-end-column="60" />
+              <caret line="202" column="53" selection-start-line="202" selection-start-column="53" selection-end-line="202" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -174,10 +170,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/compile/DependencyPool.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/Bootstrap.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/compile/CompileRound.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java" />
         <option value="$PROJECT_DIR$/src/main/resources/config.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/DependencyResponseHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java" />
       </list>
     </option>
   </component>
@@ -793,7 +789,19 @@
       <option name="project" value="LOCAL" />
       <updated>1460616660087</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Added Some logs">
+      <created>1460617882378</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1460617882378</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added Some logs">
+      <created>1460618419938</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1460618419938</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1276,16 +1284,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="180" column="60" selection-start-line="180" selection-start-column="60" selection-end-line="180" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/config.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1294,10 +1292,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeEndpoint.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <caret line="202" column="53" selection-start-line="202" selection-start-column="53" selection-end-line="202" selection-end-column="53" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1306,8 +1304,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/DependencyResponseHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6196513">
-          <caret line="54" column="38" selection-start-line="54" selection-start-column="38" selection-end-line="54" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="47" selection-start-line="52" selection-start-column="47" selection-end-line="52" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/piranha/node/communication/PiranhaNodeClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.83201265">
+          <caret line="104" column="105" selection-start-line="104" selection-start-column="105" selection-end-line="104" selection-end-column="105" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

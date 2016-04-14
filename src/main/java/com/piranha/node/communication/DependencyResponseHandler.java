@@ -41,7 +41,7 @@ public class DependencyResponseHandler extends Thread {
         ConcurrentHashMap<String, String> compiledClasses = pool.getCompletedCompiles();
 
         while (true) {
-            LOG.debug(dependenciesToSend);
+            //LOG.debug(dependenciesToSend);
 
             while (dependenciesToSend.size() > 0) {
                 //LOG.debug(dependenciesToSend);

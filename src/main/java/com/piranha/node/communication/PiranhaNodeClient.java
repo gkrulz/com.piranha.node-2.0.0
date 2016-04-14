@@ -99,11 +99,11 @@ public class PiranhaNodeClient {
         int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
 
         HttpPost request = new HttpPost("http://" + IPAddress + ":" + port + "/dependency/response");
-        LOG.debug("SEND URII - " + request.getURI());
         request.setEntity(new StringEntity(requestJson.toString()));
 
         doRequest(request);
-        LOG.debug("Successdully sent Dependency " + className);
+        LOG.debug("Successdully sent Dependency " + className+", Classpath -"+classFile.getAbsolutePath());
+
         //comm.writeToSocket(socket, requestJson);
     }
 }
