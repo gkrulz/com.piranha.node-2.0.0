@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -29,8 +30,10 @@ public class PiranhaNodeEndpoint {
     private static PiranhaNodeEndpoint singletonObject;
     private ExecutorService service;
     private AtomicBoolean isTerminateSubmitted = new AtomicBoolean(false);
+    private ArrayList<Thread> rounds;
 
     private PiranhaNodeEndpoint() throws IOException {
+        rounds = new ArrayList<>();
         int serverPort = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
         int httpBacklog = Integer.parseInt(PiranhaConfig.getProperty("HTTP_BACKLOG"));
 
@@ -41,10 +44,10 @@ public class PiranhaNodeEndpoint {
         InetSocketAddress serverSocketInet = new InetSocketAddress("0.0.0.0", serverPort);
         server = HttpServer.create(serverSocketInet, httpBacklog);
 
-        server.createContext("/round", new StartRoundContext(this.service, this.isTerminateSubmitted));
+        server.createContext("/round", new StartRoundContext(this.service, this.isTerminateSubmitted,rounds));
         server.createContext("/dependency/request", new DependencyRequestContext());
         server.createContext("/dependency/response", new DependencyResponseContext());
-        server.createContext("/terminate", new TerminationContext(this.service,this.isTerminateSubmitted));
+        server.createContext("/terminate", new TerminationContext(this.service,this.isTerminateSubmitted,rounds));
 
         server.start();
         LOG.debug("Started the HTTP Server on 0.0.0.0 with Backlog=" + httpBacklog);
@@ -66,10 +69,12 @@ public class PiranhaNodeEndpoint {
 
         private final ExecutorService service;
         private final AtomicBoolean isTerminateSubmitted;
+        private final ArrayList<Thread> rounds;
 
-        public StartRoundContext(ExecutorService service, AtomicBoolean isTerminateSubmitted) {
+        public StartRoundContext(ExecutorService service, AtomicBoolean isTerminateSubmitted,ArrayList<Thread> rounds) {
             this.service = service;
             this.isTerminateSubmitted = isTerminateSubmitted;
+            this.rounds = rounds;
         }
 
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -102,8 +107,9 @@ public class PiranhaNodeEndpoint {
                     DependencyPool.getDependencyPool().updateDependencyMap(dependencyMap);
 
                     CompileRound round = new CompileRound(classes,service);
-                    service.submit(round);
-                    //round.start();
+                    //service.submit(round);
+                    rounds.add(round);
+                    round.start();
 
                     String msg = "Successfully Started Round";
                     httpExchange.sendResponseHeaders(200, msg.length());
@@ -256,12 +262,14 @@ public class PiranhaNodeEndpoint {
 
     private static class TerminationContext implements HttpHandler {
 
-        private ExecutorService service;
-        private AtomicBoolean isTerminateSubmitted;
+        private final ExecutorService service;
+        private final AtomicBoolean isTerminateSubmitted;
+        private final ArrayList<Thread> rounds;
 
-        public TerminationContext(ExecutorService service, AtomicBoolean isTerminateSubmitted) {
+        public TerminationContext(ExecutorService service, AtomicBoolean isTerminateSubmitted,ArrayList<Thread> rounds) {
             this.service = service;
             this.isTerminateSubmitted = isTerminateSubmitted;
+            this.rounds = rounds;
         }
 
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -287,21 +295,9 @@ public class PiranhaNodeEndpoint {
                 os.write(msg.getBytes());
                 os.close();
 
-                boolean isShutdown = false;
+                Terminator terminator = new Terminator(rounds);
+                terminator.start();
 
-                while (!isShutdown){
-                    try {
-                        boolean shutdownSuccess = service.awaitTermination(1, TimeUnit.SECONDS);
-                        if(shutdownSuccess){
-                            LOG.debug("Compiler Executor Shutdown Successfully");
-
-
-                            //TODO Send all the classes back
-                        }
-                    } catch (InterruptedException e) {
-                        LOG.error("Error in awaiting Termination ",e);
-                    }
-                }
             } else {
 
                 String getErrResponse = "This is a POST only Endpoint";

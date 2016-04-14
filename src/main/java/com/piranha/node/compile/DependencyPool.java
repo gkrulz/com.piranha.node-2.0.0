@@ -82,6 +82,10 @@ public class DependencyPool {
         return dependencyMap.get(absoluteClassName);
     }
 
+    public ConcurrentHashMap<String,String> getDependencyMap(){
+        return dependencyMap;
+    }
+
     public ArrayList<String> checkForDependencies(HashMap<String, String> testMap) {
         ArrayList<String> nonContainingList = new ArrayList<String>();
         for (String dependency : testMap.values()) {
