@@ -31,6 +31,7 @@ public class Terminator extends Thread {
     }
 
     public void run() {
+        LOG.debug("Started Terminator");
         Gson gson = new Gson();
 
         boolean isShutdown = false;
@@ -42,12 +43,19 @@ public class Terminator extends Thread {
                 LOG.error("Error in Waiting in Termination ", e);
             }
 
-            boolean isAllAlive = true;
+            LOG.debug("Cheking Thread Aliveness for "+rounds.size() +"threads");
+
+            boolean isAllDead = false;
             for (Thread x : rounds) {
-                isAllAlive = isAllAlive && x.isAlive();
+                if(x.isAlive()){
+                    isAllDead = false;
+                    break;
+                }else{
+                    isAllDead = true;
+                }
             }
 
-            isShutdown = !isAllAlive;
+            isShutdown = isAllDead;
         }
 
         //---------------------------------------------------
@@ -87,7 +95,8 @@ public class Terminator extends Thread {
                 objects[i] = gson.toJson(responseJson);
 
             }
-
+            LOG.debug("Wrote to Code Collector");
+            LOG.debug("Shutting Down....");
             stream.writeObject(objects);
             stream.flush();
             try {

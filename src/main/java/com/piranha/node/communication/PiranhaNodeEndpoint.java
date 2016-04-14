@@ -287,8 +287,6 @@ public class PiranhaNodeEndpoint {
 
                 isTerminateSubmitted.compareAndSet(false,true);
 
-
-
                 String msg = "Termination Submitted Successfully";
                 httpExchange.sendResponseHeaders(200, msg.length());
                 OutputStream os = httpExchange.getResponseBody();
