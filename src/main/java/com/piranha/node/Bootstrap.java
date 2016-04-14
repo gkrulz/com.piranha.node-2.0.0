@@ -26,8 +26,8 @@ public class Bootstrap {
             e.printStackTrace();
         }
 
-        Utils.deleteDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
-        Utils.makeDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
+       // Utils.deleteDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
+        //Utils.makeDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
         try {
             PiranhaNodeEndpoint.startServer();
         } catch (IOException e) {

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class Compiler extends Thread {
      */
     public void compile(JsonArray classesToCompile) throws Exception {
 
-        ArrayList<JavaSourceFromString> jsfsList = new ArrayList<>();
+        List<JavaSourceFromString> jsfsList = new LinkedList<>();
 
         for (JsonElement element : classesToCompile) {
 
@@ -90,6 +91,7 @@ public class Compiler extends Thread {
         options.add("-d");
         options.add(PiranhaConfig.getProperty("DESTINATION_PATH"));
         options.add("-classpath");
+
         URLClassLoader urlClassLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
         StringBuilder sb = new StringBuilder();
         for (URL url : urlClassLoader.getURLs()) {
