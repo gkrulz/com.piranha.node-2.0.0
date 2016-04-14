@@ -182,7 +182,7 @@ public class PiranhaNodeEndpoint {
                     fileName = fileName.replace("/", Utils.PATH_SEPERATOR);
                     fileName = fileName.replace("\\", Utils.PATH_SEPERATOR);
 
-                    File file = new File(PiranhaConfig.getProperty("DESTINATION_PATH")+ fileName);
+                    File file = new File(PiranhaConfig.getProperty("DESTINATION_PATH")+ Utils.PATH_SEPERATOR+fileName);
                     file.getParentFile().mkdirs();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
 
