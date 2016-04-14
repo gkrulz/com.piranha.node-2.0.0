@@ -1,10 +1,16 @@
 package com.piranha.node.communication;
 
+import com.google.gson.JsonObject;
 import com.piranha.node.compile.DependencyPool;
 import com.piranha.node.util.PiranhaConfig;
 import com.piranha.node.util.Utils;
+import com.sun.org.apache.bcel.internal.Constants;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -63,7 +69,20 @@ public class Terminator extends Thread {
 
             ObjectOutputStream stream = new ObjectOutputStream(socket.getOutputStream());
             for (String className : classesToSend){
-                //TODO SEnD HER
+
+                String path = PiranhaConfig.getProperty("DESTINATION_PATH") + Utils.PATH_SEPERATOR;
+                String packagePath = className;
+                packagePath = packagePath.replace(".", Utils.PATH_SEPERATOR) + ".class";
+                File file = new File(path + packagePath);
+                FileInputStream fileInputStream = new FileInputStream(file);
+                byte[] bytes = IOUtils.toByteArray(fileInputStream);
+
+                JsonObject responseJson = new JsonObject();
+                responseJson.addProperty("className", className);
+                responseJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
+
+                stream.writeObject(responseJson.toString());
+
             }
             stream.flush();
             try {
