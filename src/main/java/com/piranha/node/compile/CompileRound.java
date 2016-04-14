@@ -23,10 +23,9 @@ public class CompileRound extends Thread {
     private ExecutorService service;
     private ConcurrentLinkedQueue<JsonObject> pendingJobs;
 
-    public CompileRound(ConcurrentLinkedQueue<JsonObject> pendingJobs) throws Exception {
+    public CompileRound(ConcurrentLinkedQueue<JsonObject> pendingJobs, ExecutorService service) throws Exception {
 
-        int compilerThreads = Integer.parseInt(PiranhaConfig.getProperty("COMPILER_THREADS"));
-        service = Executors.newFixedThreadPool(compilerThreads);
+        this.service = service;
         this.pendingJobs = pendingJobs;
     }
 

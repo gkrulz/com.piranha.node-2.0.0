@@ -38,7 +38,7 @@ public class DependencyPool {
 
     public static DependencyPool getDependencyPool() {
         if (singletonObject == null) {
-            synchronized (PiranhaNodeEndpoint.class) {
+            synchronized (DependencyPool.class) {
                 if (singletonObject == null) {
                     singletonObject = new DependencyPool();
                 }

@@ -108,4 +108,10 @@ public class PiranhaNodeClient {
 
         //comm.writeToSocket(socket, requestJson);
     }
+
+    public static void sendAllCompletedClasses (){
+
+        DependencyPool pool = DependencyPool.getDependencyPool();
+
+    }
 }

@@ -101,7 +101,7 @@ public class PiranhaNodeEndpoint {
                     LOG.debug(dependencyMap);
                     DependencyPool.getDependencyPool().updateDependencyMap(dependencyMap);
 
-                    CompileRound round = new CompileRound(classes);
+                    CompileRound round = new CompileRound(classes,service);
                     service.submit(round);
                     //round.start();
 
@@ -280,6 +280,7 @@ public class PiranhaNodeEndpoint {
                 isTerminateSubmitted.compareAndSet(false,true);
 
 
+
                 String msg = "Termination Submitted Successfully";
                 httpExchange.sendResponseHeaders(200, msg.length());
                 OutputStream os = httpExchange.getResponseBody();
@@ -292,6 +293,9 @@ public class PiranhaNodeEndpoint {
                     try {
                         boolean shutdownSuccess = service.awaitTermination(1, TimeUnit.SECONDS);
                         if(shutdownSuccess){
+                            LOG.debug("Compiler Executor Shutdown Successfully");
+
+
                             //TODO Send all the classes back
                         }
                     } catch (InterruptedException e) {
