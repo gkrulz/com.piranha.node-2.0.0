@@ -70,7 +70,10 @@ public class Compiler extends Thread {
 
             JsonObject classToCompile = element.getAsJsonObject();
             StringBuilder packageName = new StringBuilder(classToCompile.get("package").getAsString());
-            StringBuilder classString = new StringBuilder("package " + packageName.replace(packageName.length() - 1, packageName.length(), "") + ";\n");
+            StringBuilder classString = new StringBuilder("");
+            if (packageName.length() != 0) {
+                classString = new StringBuilder("package " + packageName.replace(packageName.length() - 1, packageName.length(), "") + ";\n");
+            }
 
             for (JsonElement importStatement : classToCompile.get("importStatements").getAsJsonArray()) {
                 classString.append("import " + importStatement.getAsString() + ";\n");
