@@ -93,7 +93,7 @@ public class PiranhaNodeClient {
         JsonObject requestJson = new JsonObject();
         requestJson.addProperty("op", "RESPONSE");
         requestJson.addProperty("className", className);
-        requestJson.addProperty("classPath", classFile.getAbsolutePath());
+        requestJson.addProperty("classPath", packagePath);
         requestJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
 
         int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
@@ -102,7 +102,7 @@ public class PiranhaNodeClient {
         request.setEntity(new StringEntity(requestJson.toString()));
 
         doRequest(request);
-        LOG.debug("Successdully sent Dependency " + className+", Classpath -"+classFile.getAbsolutePath());
+        LOG.debug("Successdully sent Dependency " + className+", Classpath -"+packagePath);
 
         //comm.writeToSocket(socket, requestJson);
     }
