@@ -18,7 +18,7 @@ public class Bootstrap {
 
         System.setProperty("org.apache.commons.logging.Log",
                 "org.apache.commons.logging.impl.NoOpLog");
-        
+
         //Innitializing Properties
         try {
             PiranhaConfig.innitializeProperties();
@@ -26,8 +26,8 @@ public class Bootstrap {
             e.printStackTrace();
         }
 
-       // Utils.deleteDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
-        //Utils.makeDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
+        Utils.deleteDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
+        Utils.makeDirectory(new File(PiranhaConfig.getProperty("DESTINATION_PATH")));
         try {
             PiranhaNodeEndpoint.startServer();
         } catch (IOException e) {
@@ -38,7 +38,7 @@ public class Bootstrap {
         responseHandler.start();
 
         try {
-            Socket serverPing = new Socket(PiranhaConfig.getProperty("SERVER_ADDRESS"),9005);
+            Socket serverPing = new Socket(PiranhaConfig.getProperty("SERVER_ADDRESS"), 9005);
             serverPing.close();
         } catch (IOException e) {
             e.printStackTrace();

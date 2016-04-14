@@ -45,6 +45,7 @@ public class Compiler extends Thread {
             }
         } else {
             JsonArray toBeCompiledWithArray = classJson.get("toBeCompiledWith").getAsJsonArray();
+            toBeCompiledWithArray.add(classJson);
             try {
                 this.compile(toBeCompiledWithArray);
             } catch (Exception e) {
