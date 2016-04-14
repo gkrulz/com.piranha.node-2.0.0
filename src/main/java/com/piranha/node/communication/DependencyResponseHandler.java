@@ -41,9 +41,10 @@ public class DependencyResponseHandler extends Thread {
         ConcurrentHashMap<String, String> compiledClasses = pool.getCompletedCompiles();
 
         while (true) {
+            LOG.debug(dependenciesToSend);
 
             while (dependenciesToSend.size() > 0) {
-                LOG.debug(dependenciesToSend);
+                //LOG.debug(dependenciesToSend);
                 JsonObject classObject = dependenciesToSend.peek();
                 String classname = classObject.get("className").getAsString();
                 if (compiledClasses.get(classname) != null) {
@@ -51,7 +52,7 @@ public class DependencyResponseHandler extends Thread {
                     try {
                         PiranhaNodeClient.SendDependency(classname, IP);
                         dependenciesToSend.poll();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         LOG.error("Error In Sending Dependency " + classname, e);
                     }
                 }else{

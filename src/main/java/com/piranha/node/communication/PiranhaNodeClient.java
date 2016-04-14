@@ -61,7 +61,7 @@ public class PiranhaNodeClient {
 
         try {
             HttpResponse response = doRequest(request);
-            LOG.debug("Successfully Requested Dependency "+className);
+            LOG.debug("Successfully Requested Dependency " + className);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new IOException("Status Code not 200 in DependencyRequest Response ");
             }
@@ -86,22 +86,23 @@ public class PiranhaNodeClient {
 
         byte[] bytes = IOUtils.toByteArray(fileInputStream);
         fileInputStream.close();
-        String className = classFile.getAbsolutePath();
+        String className = classNameString;
         className = className.replace(PiranhaConfig.getProperty("DESTINATION_PATH"), "");
 
         JsonObject requestJson = new JsonObject();
         requestJson.addProperty("op", "RESPONSE");
         requestJson.addProperty("className", className);
+        requestJson.addProperty("classPath", classFile.getAbsolutePath());
         requestJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
 
         int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
 
         HttpPost request = new HttpPost("http://" + IPAddress + ":" + port + "/dependency/response");
-        LOG.debug("SEND URII - "+request.getURI());
+        LOG.debug("SEND URII - " + request.getURI());
         request.setEntity(new StringEntity(requestJson.toString()));
 
         doRequest(request);
-        LOG.debug("Successdully sent Dependency "+className);
+        LOG.debug("Successdully sent Dependency " + className);
         //comm.writeToSocket(socket, requestJson);
     }
 }

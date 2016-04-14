@@ -18,7 +18,7 @@ public class Bootstrap {
 
         System.setProperty("org.apache.commons.logging.Log",
                 "org.apache.commons.logging.impl.NoOpLog");
-
+        
         //Innitializing Properties
         try {
             PiranhaConfig.innitializeProperties();

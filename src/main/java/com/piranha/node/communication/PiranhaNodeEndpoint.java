@@ -178,7 +178,7 @@ public class PiranhaNodeEndpoint {
                         throw new Exception("Invalid OP code object from " + httpExchange.getRemoteAddress());
                     }
 
-                    String fileName = request.get("className").getAsString();
+                    String fileName = request.get("classPath").getAsString();
                     fileName = fileName.replace("/", Utils.PATH_SEPERATOR);
                     fileName = fileName.replace("\\", Utils.PATH_SEPERATOR);
 

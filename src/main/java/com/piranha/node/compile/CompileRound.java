@@ -45,7 +45,7 @@ public class CompileRound extends Thread {
             }
             JsonObject currentObject = pendingJobs.peek();
 
-            LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation");
+            //LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation");
             HashMap<String, String> dependencies = gson.fromJson(currentObject.get("dependencies").getAsString(), Utils.hashMapType);
 
             try {
@@ -53,7 +53,7 @@ public class CompileRound extends Thread {
                 ArrayList<String> nonContainingDependencies = dependencyPool.checkForDependencies(dependencies);
                 if (nonContainingDependencies.size() == 0) {
 
-                    LOG.debug("Found All Dependencies for "+currentObject.get("absoluteClassName")+". Initiating Compilation");
+                    //LOG.debug("Found All Dependencies for "+currentObject.get("absoluteClassName")+". Initiating Compilation");
                     Compiler compiler = new Compiler(currentObject);
 
                     if (currentObject.get("toBeCompiledWith") != null) {
