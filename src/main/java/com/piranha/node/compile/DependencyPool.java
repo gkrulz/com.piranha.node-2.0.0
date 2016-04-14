@@ -1,7 +1,9 @@
 package com.piranha.node.compile;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.piranha.node.communication.PiranhaNodeEndpoint;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by root on 4/13/16.
  */
 public class DependencyPool {
+    private static final Logger LOG = Logger.getLogger(DependencyPool.class);
 
     private static DependencyPool singletonObject;
 
@@ -47,6 +50,7 @@ public class DependencyPool {
     public void addAClass(String absoluteClassName) {
         completedCompiles.put(absoluteClassName, absoluteClassName);
         pendingCompiles.remove(absoluteClassName);
+        LOG.debug("COMPLETED CLASSES - "+new Gson().toJson(completedCompiles));
     }
 
     public void addClasses(ArrayList<String> classList) {
@@ -54,6 +58,8 @@ public class DependencyPool {
             completedCompiles.put(className, className);
             pendingCompiles.remove(className);
         }
+        LOG.debug("COMPLETED CLASSES - "+new Gson().toJson(completedCompiles));
+
     }
 
     public boolean doIHaveDependency(String absoluteClassName) {

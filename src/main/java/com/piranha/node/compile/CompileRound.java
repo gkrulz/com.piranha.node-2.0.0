@@ -42,8 +42,13 @@ public class CompileRound extends Thread {
             }
             JsonObject currentObject = pendingJobs.peek();
 
-            LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation");
             HashMap<String, String> dependencies = gson.fromJson(currentObject.get("dependencies").getAsString(), Utils.hashMapType);
+            /*if(currentObject.get("absoluteClassName").getAsString().equals("com.piranha.scan.ScannerTask")){
+                System.out.println("");
+            }*/
+            LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation "+gson.toJson(dependencies));
+            //LOG.debug("PENDING JOBS "+gson.toJson(pendingJobs));
+
 
             try {
                 DependencyPool dependencyPool = DependencyPool.getDependencyPool();
@@ -67,8 +72,8 @@ public class CompileRound extends Thread {
                 } else {
                     for (String classToRequest : nonContainingDependencies) {
                         PiranhaNodeClient.RequestDependency(classToRequest);
-                        pendingJobs.add(pendingJobs.poll());
                     }
+                    pendingJobs.add(pendingJobs.poll());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

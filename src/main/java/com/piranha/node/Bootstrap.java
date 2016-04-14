@@ -4,7 +4,6 @@ import com.piranha.node.communication.DependencyResponseHandler;
 import com.piranha.node.communication.PiranhaNodeEndpoint;
 import com.piranha.node.util.PiranhaConfig;
 import com.piranha.node.util.Utils;
-import com.sun.xml.internal.bind.v2.schemagen.Util;
 
 import java.io.File;
 import java.io.IOException;
