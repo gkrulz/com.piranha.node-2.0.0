@@ -103,6 +103,7 @@ public class Compiler extends Thread {
 
         StringWriter output = new StringWriter();
         boolean success = jc.getTask(output, null, null, options, null, fileObjects).call();
+
         if (success) {
             ArrayList<String> compiledClasses = new ArrayList<>();
             for (JsonElement element : classesToCompile) {
@@ -125,7 +126,10 @@ public class Compiler extends Thread {
     public void compile(JsonObject classToCompile) throws Exception {
 
         StringBuilder packageName = new StringBuilder(classToCompile.get("package").getAsString());
-        StringBuilder classString = new StringBuilder("package " + packageName.replace(packageName.length() - 1, packageName.length(), "") + ";\n");
+        StringBuilder classString = new StringBuilder("");
+        if (packageName.length() != 0) {
+            classString = new StringBuilder("package " + packageName.replace(packageName.length() - 1, packageName.length(), "") + ";\n");
+        }
 
         for (JsonElement importStatement : classToCompile.get("importStatements").getAsJsonArray()) {
             classString.append("import " + importStatement.getAsString() + ";\n");
