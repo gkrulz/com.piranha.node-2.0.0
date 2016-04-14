@@ -61,6 +61,7 @@ public class PiranhaNodeClient {
         pool.addReqestedDependency(className);
 
         try {
+            LOG.debug("URI FOR "+className+"-"+request.getURI());
             HttpResponse response = doRequest(request);
             LOG.debug("Successfully Requested Dependency " + className);
             if (response.getStatusLine().getStatusCode() != 200) {
