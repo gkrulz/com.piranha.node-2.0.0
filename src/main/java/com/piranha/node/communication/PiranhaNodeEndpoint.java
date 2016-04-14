@@ -16,9 +16,8 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by root on 4/13/16.
@@ -28,18 +27,24 @@ public class PiranhaNodeEndpoint {
     private static final Logger LOG = Logger.getLogger(PiranhaNodeEndpoint.class);
     private HttpServer server;
     private static PiranhaNodeEndpoint singletonObject;
+    private ExecutorService service;
+    private AtomicBoolean isTerminateSubmitted = new AtomicBoolean(false);
 
     private PiranhaNodeEndpoint() throws IOException {
         int serverPort = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
         int httpBacklog = Integer.parseInt(PiranhaConfig.getProperty("HTTP_BACKLOG"));
 
+        int compilerThreads = Integer.parseInt(PiranhaConfig.getProperty("COMPILER_THREADS"));
+
+        this.service = Executors.newFixedThreadPool(compilerThreads);
+
         InetSocketAddress serverSocketInet = new InetSocketAddress("0.0.0.0", serverPort);
         server = HttpServer.create(serverSocketInet, httpBacklog);
 
-        server.createContext("/round", new StartRoundContext());
+        server.createContext("/round", new StartRoundContext(this.service, this.isTerminateSubmitted));
         server.createContext("/dependency/request", new DependencyRequestContext());
         server.createContext("/dependency/response", new DependencyResponseContext());
-        server.createContext("/terminate", new TerminationContext());
+        server.createContext("/terminate", new TerminationContext(this.service,this.isTerminateSubmitted));
 
         server.start();
         LOG.debug("Started the HTTP Server on 0.0.0.0 with Backlog=" + httpBacklog);
@@ -59,15 +64,27 @@ public class PiranhaNodeEndpoint {
     private static class StartRoundContext implements HttpHandler {
 
 
-        //private final ExecutorService service;
+        private final ExecutorService service;
+        private final AtomicBoolean isTerminateSubmitted;
 
-        //public StartRoundContext(int )
+        public StartRoundContext(ExecutorService service, AtomicBoolean isTerminateSubmitted) {
+            this.service = service;
+            this.isTerminateSubmitted = isTerminateSubmitted;
+        }
 
         public void handle(HttpExchange httpExchange) throws IOException {
 
             if (httpExchange.getRequestMethod().equals("POST")) {
                 LOG.debug("ENDPOINT HIT /round from" + httpExchange.getRemoteAddress());
 
+                if (isTerminateSubmitted.get()) {
+                    String msg = "Cannot Submit New Rounds , Termination Initiated";
+                    httpExchange.sendResponseHeaders(405, msg.length());
+                    OutputStream os = httpExchange.getResponseBody();
+                    os.write(msg.getBytes());
+                    os.close();
+                    return;
+                }
                 JsonParser parser = new JsonParser();
                 try {
                     JsonObject roundObject = parser.parse(new String(IOUtils.toByteArray(httpExchange.getRequestBody()))).getAsJsonObject();
@@ -85,7 +102,8 @@ public class PiranhaNodeEndpoint {
                     DependencyPool.getDependencyPool().updateDependencyMap(dependencyMap);
 
                     CompileRound round = new CompileRound(classes);
-                    round.start();
+                    service.submit(round);
+                    //round.start();
 
                     String msg = "Successfully Started Round";
                     httpExchange.sendResponseHeaders(200, msg.length());
@@ -189,7 +207,7 @@ public class PiranhaNodeEndpoint {
                     fileName = fileName.replace("/", Utils.PATH_SEPERATOR);
                     fileName = fileName.replace("\\", Utils.PATH_SEPERATOR);
 
-                    File file = new File(PiranhaConfig.getProperty("DESTINATION_PATH")+ Utils.PATH_SEPERATOR+fileName);
+                    File file = new File(PiranhaConfig.getProperty("DESTINATION_PATH") + Utils.PATH_SEPERATOR + fileName);
                     file.getParentFile().mkdirs();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
 
@@ -202,7 +220,7 @@ public class PiranhaNodeEndpoint {
                     fileOutputStream.close();
 
 
-                    LOG.debug("Successfully Received Dependency "+request.get("className").getAsString());
+                    LOG.debug("Successfully Received Dependency " + request.get("className").getAsString());
                     DependencyPool pool = DependencyPool.getDependencyPool();
                     pool.removeRequestedDependency(request.get("className").getAsString());
                     pool.addAClass(request.get("className").getAsString());
@@ -238,10 +256,48 @@ public class PiranhaNodeEndpoint {
 
     private static class TerminationContext implements HttpHandler {
 
+        private ExecutorService service;
+        private AtomicBoolean isTerminateSubmitted;
+
+        public TerminationContext(ExecutorService service, AtomicBoolean isTerminateSubmitted) {
+            this.service = service;
+            this.isTerminateSubmitted = isTerminateSubmitted;
+        }
+
         public void handle(HttpExchange httpExchange) throws IOException {
             if (httpExchange.getRequestMethod().equals("POST")) {
                 LOG.debug("ENDPOINT HIT /terminate from" + httpExchange.getRemoteAddress());
 
+                if (isTerminateSubmitted.get()) {
+                    String msg = "Cannot Submit Termination , Termination already Initiated";
+                    httpExchange.sendResponseHeaders(405, msg.length());
+                    OutputStream os = httpExchange.getResponseBody();
+                    os.write(msg.getBytes());
+                    os.close();
+                    return;
+                }
+
+                isTerminateSubmitted.compareAndSet(false,true);
+
+
+                String msg = "Termination Submitted Successfully";
+                httpExchange.sendResponseHeaders(200, msg.length());
+                OutputStream os = httpExchange.getResponseBody();
+                os.write(msg.getBytes());
+                os.close();
+
+                boolean isShutdown = false;
+
+                while (!isShutdown){
+                    try {
+                        boolean shutdownSuccess = service.awaitTermination(1, TimeUnit.SECONDS);
+                        if(shutdownSuccess){
+                            //TODO Send all the classes back
+                        }
+                    } catch (InterruptedException e) {
+                        LOG.error("Error in awaiting Termination ",e);
+                    }
+                }
             } else {
 
                 String getErrResponse = "This is a POST only Endpoint";

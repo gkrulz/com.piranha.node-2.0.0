@@ -30,9 +30,6 @@ public class CompileRound extends Thread {
         this.pendingJobs = pendingJobs;
     }
 
-    public void submitCompilingJob(JsonObject compileJob) {
-        pendingJobs.add(compileJob);
-    }
 
     public void run() {
         Gson gson = new Gson();
@@ -45,7 +42,7 @@ public class CompileRound extends Thread {
             }
             JsonObject currentObject = pendingJobs.peek();
 
-            //LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation");
+            LOG.debug("Checking for Dependencies of " + currentObject.get("absoluteClassName") + "for Compilation");
             HashMap<String, String> dependencies = gson.fromJson(currentObject.get("dependencies").getAsString(), Utils.hashMapType);
 
             try {
@@ -53,7 +50,7 @@ public class CompileRound extends Thread {
                 ArrayList<String> nonContainingDependencies = dependencyPool.checkForDependencies(dependencies);
                 if (nonContainingDependencies.size() == 0) {
 
-                    //LOG.debug("Found All Dependencies for "+currentObject.get("absoluteClassName")+". Initiating Compilation");
+                    LOG.debug("Found All Dependencies for "+currentObject.get("absoluteClassName")+". Initiating Compilation");
                     Compiler compiler = new Compiler(currentObject);
 
                     if (currentObject.get("toBeCompiledWith") != null) {
@@ -65,10 +62,10 @@ public class CompileRound extends Thread {
                     }
                     dependencyPool.addAPendingClass(currentObject.get("absoluteClassName").getAsString());
                     service.submit(compiler);
-                    LOG.debug("Submitted an Executor for "+currentObject.get("absoluteClassName")+" for compilation");
+                    LOG.debug("Submitted an Executor for " + currentObject.get("absoluteClassName") + " for compilation");
                     pendingJobs.poll();
                 } else {
-                    for (String classToRequest : nonContainingDependencies){
+                    for (String classToRequest : nonContainingDependencies) {
                         PiranhaNodeClient.RequestDependency(classToRequest);
                         pendingJobs.add(pendingJobs.poll());
                     }
@@ -77,9 +74,6 @@ public class CompileRound extends Thread {
                 e.printStackTrace();
                 LOG.error("Error in Dependency Pool Singleton Class", e);
             }
-
-
-            //TODO check for dependency if not found even 1, add the class to the back of the que, request it and move on
         }
     }
 }

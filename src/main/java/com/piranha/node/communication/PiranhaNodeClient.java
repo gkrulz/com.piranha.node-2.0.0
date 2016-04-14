@@ -33,11 +33,12 @@ public class PiranhaNodeClient {
     public static void RequestDependency(String className) throws SocketException {
 
         DependencyPool pool = DependencyPool.getDependencyPool();
+        String dependencyNodeURI = pool.whereIsDependency(className);
 
         if (pool.haveIRequestedDependency(className)) {
+            LOG.debug("DROPPING REQUEST "+className+" -- "+dependencyNodeURI);
             return;
         }
-        String dependencyNodeURI = pool.whereIsDependency(className);
 
         InetAddress loacalIP = Utils.getFirstNonLoopbackAddress(true, false);
         int port = Integer.parseInt(PiranhaConfig.getProperty("CLIENT_PORT"));
