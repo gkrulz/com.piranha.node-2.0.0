@@ -1,5 +1,6 @@
 package com.piranha.node.communication;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.piranha.node.compile.DependencyPool;
 import com.piranha.node.util.PiranhaConfig;
@@ -30,6 +31,7 @@ public class Terminator extends Thread {
     }
 
     public void run() {
+        Gson gson = new Gson();
 
         boolean isShutdown = false;
 
@@ -68,7 +70,7 @@ public class Terminator extends Thread {
             }
 
             ObjectOutputStream stream = new ObjectOutputStream(socket.getOutputStream());
-            JsonObject[] objects = new JsonObject[classesToSend.size()];
+            String[] objects = new String[classesToSend.size()];
             for (int i = 0; i < classesToSend.size(); i++){
                 String className = classesToSend.get(i);
                 String path = PiranhaConfig.getProperty("DESTINATION_PATH") + Utils.PATH_SEPERATOR;
@@ -82,7 +84,7 @@ public class Terminator extends Thread {
                 responseJson.addProperty("className", className);
                 responseJson.addProperty("file", new String(Base64.encodeBase64(bytes)));
 
-                objects[i] = responseJson;
+                objects[i] = gson.toJson(responseJson);
 
             }
 
