@@ -1,6 +1,7 @@
 package com.piranha.node.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -13,8 +14,8 @@ public class PiranhaConfig {
 
     public static void innitializeProperties() throws IOException {
 
-
-        properties.load(new FileReader(new File("/piranha/config.properties")));
+        properties.load(PiranhaConfig.class.getClassLoader().getResourceAsStream("config.properties"));
+//        properties.load(new FileReader(new File("/piranha/config.properties")));
     }
 
     public static String getProperty(String name){
