@@ -15,10 +15,10 @@ public class PiranhaConfig {
     public static void innitializeProperties() throws IOException {
 
         properties.load(PiranhaConfig.class.getClassLoader().getResourceAsStream("config.properties"));
-//        properties.load(new FileReader(new File("/piranha/config.properties")));
+       //properties.load(new FileReader(new File("/piranha/config.properties")));
     }
 
-    public static String getProperty(String name){
+    public static String getProperty(String name) {
         return properties.getProperty(name);
     }
 }

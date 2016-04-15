@@ -112,8 +112,5 @@ public class Terminator extends Thread {
         } catch (IOException e) {
             LOG.error("Error in Connecting to Termination Socket", e);
         }
-
-        //---------------------------------------------------
-        System.exit(0);
     }
 }
