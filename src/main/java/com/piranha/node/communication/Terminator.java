@@ -96,7 +96,7 @@ public class Terminator extends Thread {
 
             }
             LOG.debug("Wrote to Code Collector");
-            LOG.debug("Shutting Down....");
+            LOG.debug("Compilation Finished....");
             stream.writeObject(objects);
             stream.flush();
             try {
@@ -107,7 +107,7 @@ public class Terminator extends Thread {
             stream.close();
             socket.close();
 
-            System.exit(0);
+            //System.exit(0);
 
         } catch (IOException e) {
             LOG.error("Error in Connecting to Termination Socket", e);
